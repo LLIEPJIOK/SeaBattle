@@ -20,9 +20,9 @@ public class Ship {
         this.parts = parts;
     }
 
-    public void paint(Graphics2D g2d) {
+    public void paint(Graphics2D g2d, boolean isEnemy) {
         for (PartOfShip part : parts) {
-            part.paint(g2d);
+            part.paint(g2d, isEnemy);
         }
     }
 

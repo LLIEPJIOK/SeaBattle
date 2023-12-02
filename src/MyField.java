@@ -10,8 +10,10 @@ public class MyField extends JComponent {
     private final int CELL_SIZE = 40;
     private final int[][] cells;
     private final List<Ship> ships;
+    private final boolean isEnemy;
 
-    public MyField() {
+    public MyField(boolean isEnemy) {
+        this.isEnemy = isEnemy;
         cells = new int[SIZE][SIZE];
         createWindow();
 
@@ -41,7 +43,7 @@ public class MyField extends JComponent {
 
     private void drawShips(Graphics2D g2d) {
         for (Ship ship : ships) {
-            ship.paint(g2d);
+            ship.paint(g2d, isEnemy);
         }
     }
 
@@ -84,7 +86,9 @@ public class MyField extends JComponent {
 
     private void createWindow() {
         setSize(new Dimension((SIZE + 1) * CELL_SIZE + 3, (SIZE + 1) * CELL_SIZE + 3));
-        addMouseListener(new CellClickListener());
+        if (isEnemy) {
+            addMouseListener(new CellClickListener());
+        }
     }
 
     private boolean updateShips(Coordinate coordinate) {

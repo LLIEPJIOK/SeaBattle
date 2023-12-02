@@ -19,7 +19,7 @@ public class PartOfShip {
         this.isAlive = true;
     }
 
-    public void paint(Graphics2D g2d) {
+    public void paint(Graphics2D g2d, boolean isEnemy) {
         final int CELL_SIZE = 40;
         int x = coordinate.getX() * CELL_SIZE;
         int y = coordinate.getY() * CELL_SIZE;
@@ -29,8 +29,10 @@ public class PartOfShip {
             g2d.drawLine(x, y, x + CELL_SIZE, y + CELL_SIZE);
             g2d.drawLine(x + CELL_SIZE, y, x, y + CELL_SIZE);
         }
-        g2d.setColor(Color.BLUE);
-        g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+        if (!isAlive || !isEnemy) {
+            g2d.setColor(Color.BLUE);
+            g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+        }
     }
 
     public boolean update(Coordinate coordinate) {
