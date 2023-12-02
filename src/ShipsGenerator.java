@@ -19,7 +19,7 @@ public class ShipsGenerator {
 
             // Выведите данные
             for (Ship ship : ships) {
-                System.out.println("n: " + ship.getN());
+//                System.out.println("n: " + ship.getN());
                 System.out.println("Points:");
 //                for (Point point : ship.getPoints()) {
 //                    System.out.println("  x: " + point.getX() + ", y: " + point.getY());

@@ -96,13 +96,13 @@ public class Menu extends JFrame {
     }
 
     private void configureButtonExit(JButton button) {
-        button.setBackground(new Color(173, 23, 41, 200));
+        button.setBackground(new Color(173, 23, 41));
         button.setForeground(Color.WHITE);
         Border border = new LineBorder(new Color(0, 0, 0), 4, false);
         button.setBorder(border);
         Font font = new Font("Arial", Font.BOLD, 26);
         button.setFont(font);
-        button.setForeground(new Color(173, 23, 41, 255));
+        button.setForeground(new Color(173, 23, 41));
         button.setOpaque(false);
         button.setFocusPainted(false);
         button.setPreferredSize(new Dimension(150, 50));
