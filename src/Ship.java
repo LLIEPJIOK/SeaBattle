@@ -3,6 +3,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.awt.*;
 import java.util.List;
 
 @Setter
@@ -10,10 +11,31 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ship {
-    private int n;
+    private int partsAlive;
     private List<PartOfShip> parts;
+    transient private ShipInformer shipInformer;
+
     public Ship(List<PartOfShip> parts) {
-        this.n = parts.size();
+        this.partsAlive = parts.size();
         this.parts = parts;
+    }
+
+    public void paint(Graphics2D g2d) {
+        for (PartOfShip part : parts) {
+            part.paint(g2d);
+        }
+    }
+
+    public boolean update(Coordinate coordinate) {
+        for (PartOfShip part : parts) {
+            if (part.update(coordinate)) {
+                --partsAlive;
+                if (partsAlive == 0) {
+                    shipInformer.informAboutDestruction(parts.stream().map(PartOfShip::getCoordinate).toList());
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
