@@ -1,7 +1,4 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -11,50 +8,71 @@ public class MyField extends JComponent {
     private static final int SIZE = 10;
     private static final int CELL_SIZE = 40;
 
-    private boolean[][] cells;
+    private final boolean[][] cells;
 
     public MyField() {
         cells = new boolean[SIZE][SIZE];
         createWindow();
     }
 
-    private void drawLetters(Graphics g) {
-
-    }
-
-    private void drawDigits(Graphics g) {
-        char[] chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
-        g.setColor(Color.BLUE);
-        g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        for (int j = 1; j <= 10; ++j) {
-            g.drawString(String.valueOf(chars[j - 1]), j * CELL_SIZE + 10, CELL_SIZE - 10);
+    private void drawField(Graphics2D g2d) {
+        g2d.setColor(new Color(128, 0, 128));
+        g2d.setStroke(new BasicStroke(0.3f));
+        for (int i = 1; i <= SIZE + 2; i++) {
+            g2d.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, (SIZE + 1) * CELL_SIZE);
+            g2d.drawLine(0, i * CELL_SIZE, (SIZE + 1) * CELL_SIZE, i * CELL_SIZE);
         }
-    }
-
-    private void drawField(Graphics g) {
-        for (int i = 1; i <= SIZE + 1; i++) {
-            g.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, SIZE * CELL_SIZE);
-            g.drawLine(0, i * CELL_SIZE + 0, (SIZE + 1) * CELL_SIZE, i * CELL_SIZE);
-        }
+        g2d.setColor(Color.red);
+        g2d.setStroke(new BasicStroke(5.0f));
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (cells[i][j]) {
-                    g.setColor(Color.BLUE);
-                    g.fillRect((j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                    int x = (int)((j + 1.5) * CELL_SIZE);
+                    int y = (int)((i + 1.5) * CELL_SIZE);
+                    g2d.fillOval(x - 2, y - 2, 4, 4);
                 }
+            }
+        }
+    }
+
+    private void drawLetters(Graphics2D g2d) {
+        String[] letters = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+        for (int i = 1; i <= 10; ++i) {
+            if (i <= 8) {
+                g2d.drawString(letters[i - 1], i * CELL_SIZE + 10, CELL_SIZE - 10);
+            } else {
+                g2d.drawString(letters[i - 1], i * CELL_SIZE + 15, CELL_SIZE - 10);
+            }
+        }
+    }
+
+    private void drawDigits(Graphics2D g2d) {
+        String[] digits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+        for (int i = 1; i <= 10; ++i) {
+            if (i == 10) {
+                g2d.drawString(digits[i - 1], 3, 10 * CELL_SIZE + 32);
+            } else {
+                g2d.drawString(digits[i - 1], 12, i * CELL_SIZE + 32);
             }
         }
     }
 
     public void paint(Graphics g) {
         super.paintComponent(g);
-        drawField(g);
-        drawLetters(g);
-        drawDigits(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        drawField(g2d);
+
+        g2d.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+        g2d.setColor(Color.BLUE);
+        drawLetters(g2d);
+        drawDigits(g2d);
     }
 
     private void createWindow() {
-        setSize(new Dimension((SIZE + 1) * CELL_SIZE + 1, (SIZE + 1) * CELL_SIZE));
+        setSize(new Dimension((SIZE + 1) * CELL_SIZE + 1, (SIZE + 1) * CELL_SIZE + 1));
         addMouseListener(new CellClickListener());
     }
 

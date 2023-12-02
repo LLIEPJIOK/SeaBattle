@@ -30,7 +30,7 @@ public class Menu extends JFrame {
         backgroundLabel.setBounds(0, 0, 200, 150);
         add(backgroundLabel);
 
-        JButton playButton = new JButton("Играть");
+        JButton playButton = new JButton("Play");
         playButton.setBackground(new Color(92, 184, 92));
         playButton.setForeground(Color.WHITE);
         Border border = new LineBorder(new Color(76, 174, 76), 2, true);
