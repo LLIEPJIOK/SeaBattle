@@ -2,8 +2,6 @@ package core;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class Message extends JDialog {
@@ -17,32 +15,12 @@ public class Message extends JDialog {
         setSize(485, 200);
         setLocationRelativeTo(null);
 
-        JTextArea textArea = new JTextArea(text);
-        configureTextArea(textArea, text);
+        JTextArea textArea = ComponentsCreator.createTextArea(text);
 
-        JButton okButton = new JButton("Close");
-        configureButton(okButton);
+        JButton okButton = ComponentsCreator.createButton("Close");
+        okButton.addActionListener(e -> dispose());
 
         add(textArea, BorderLayout.CENTER);
         add(okButton, BorderLayout.SOUTH);
-
-        setVisible(false);
-    }
-
-    private void configureTextArea(JTextArea textArea, String text) {
-        textArea.setEditable(false);
-        Font font = new Font("Arial", Font.BOLD, 16);
-        textArea.setFont(font);
-        textArea.setForeground(Color.BLACK);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setBackground(Color.WHITE);
-        textArea.setFocusable(false);
-    }
-
-    private void configureButton(JButton okButton) {
-        ComponentsCreator.createButton(okButton);
-        okButton.addActionListener(e -> dispose());
-        okButton.addMouseListener(new ButtonHoverMouseAdapter());
     }
 }

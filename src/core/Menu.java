@@ -1,14 +1,8 @@
 package core;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Objects;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class Menu extends JFrame {
 
@@ -26,12 +20,9 @@ public class Menu extends JFrame {
 
     private JLabel nameLabel;
 
-    private AnimatedPanel mainMenuPanel;
-    private AnimatedPanel playPanel;
-
     //Menu constructor
     public Menu() {
-        mainWindowCretion();
+        mainWindowCreation();
         allObjectsCreation();
         panelsCreation();
         musicCreation();
@@ -39,34 +30,35 @@ public class Menu extends JFrame {
         setVisible(true);
     }
 
-    private void allObjectsCreation() {
-        playButton = new JButton("Play");
-        exitButton = new JButton("Exit");
-        backButton = new JButton("Back");
-        connectButton = new JButton("Connect");
-        createButton = new JButton("Create");
-        helpButton = new JButton("Help");
-        nameEnter = new JTextField();
-        nameLabel = new JLabel("Enter name:");
+    private void mainWindowCreation() {
+        setTitle("Sea Battle");
+        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuIcon.png"))).getImage());
+        setSize(450, 330);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setResizable(false);
+    }
 
-        configureButtonPlay(playButton);
-        configureButtonExit(exitButton);
-        configureButtonBack(backButton);
-        configureButtonCreate(createButton);
-        configureButtonConnect(connectButton);
-        configureButtonHelp(helpButton);
-        configureNameEnterField(nameEnter);
-        configureNameLabel(nameLabel);
+    private void allObjectsCreation() {
+        createButtonPlay();
+        createButtonExit();
+        createButtonBack();
+        createButtonConnect();
+        createButtonCreate();
+        createButtonHelp();
+        createNameEnterField();
+        createNameLabel();
     }
 
     private void panelsCreation() {
         partsPanels = new CardLayout();
         partPanel = new JPanel(partsPanels);
 
-        mainMenuPanel = new AnimatedPanel();
+        AnimatedPanel mainMenuPanel = new AnimatedPanel();
         mainMenuPanel.setBounds(0, 0, 450, 330);
 
-        playPanel = new AnimatedPanel();
+        AnimatedPanel playPanel = new AnimatedPanel();
         playPanel.setBounds(0, 0, 450, 330);
 
         playPanel.add(nameEnter, 1, 0);
@@ -75,7 +67,6 @@ public class Menu extends JFrame {
         playPanel.add(createButton, 1, 1);
         playPanel.add(backButton, 0, 2);
         playPanel.add(helpButton, 1, 2);
-
 
         mainMenuPanel.add(playButton, 1, 1);
         mainMenuPanel.add(exitButton, 1, 4);
@@ -94,72 +85,52 @@ public class Menu extends JFrame {
         SoundPlayer.playBackgroundMusic();
     }
 
-    private void mainWindowCretion() {
-        setTitle("Sea Battle");
-        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuIcon.png"))).getImage());
-        setSize(450, 330);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setResizable(false);
-    }
-
     private void helpDialogCreation() {
         help = new Message(" -Press 'connect' if your friend already created a game to link with him and start to play\n -Press 'create' to make your own host\n -Don't foget to enter your name \n -Good luck!");
     }
 
-    private void configureButtonHelp(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> help.setVisible(true));
-        button.addMouseListener(new ButtonHoverMouseAdapter());
+    private void createButtonPlay() {
+        playButton = ComponentsCreator.createButton("Play");
+        playButton.addActionListener(e -> partsPanels.show(partPanel, "game"));
     }
 
-    private void configureButtonCreate(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> {});
-        button.addMouseListener(new ButtonHoverMouseAdapter());
+    private void createButtonExit() {
+        exitButton = ComponentsCreator.createButton("Exit");
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
-    private void configureButtonConnect(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> {});
-        button.addMouseListener(new ButtonHoverMouseAdapter());
-    }
-
-    private void configureButtonPlay(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> partsPanels.show(partPanel, "game"));
-        button.addMouseListener(new ButtonHoverMouseAdapter());
-    }
-
-    private void configureButtonExit(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> System.exit(0));
-        button.addMouseListener(new ButtonHoverMouseAdapter());
-    }
-
-    private void configureButtonBack(JButton button) {
-        ComponentsCreator.createButton(button);
-        button.addActionListener(e -> {
+    private void createButtonBack() {
+        backButton = ComponentsCreator.createButton("Back");
+        backButton.addActionListener(e -> {
             nameEnter.setText("");
             partsPanels.show(partPanel, "start");
         });
-
-        button.addMouseListener(new ButtonHoverMouseAdapter());
     }
 
-    private void configureNameEnterField(JTextField textField) {
-        textField.setPreferredSize(new Dimension(200, 36));
-        textField.setBackground(new Color(0xB8CEE4));
-        Border border = new LineBorder(new Color(0, 0, 0), 2, false);
-        textField.setBorder(border);
-        Font font = new Font("Arial", Font.ITALIC, 21);
-        textField.setFont(font);
-        textField.getDocument().addDocumentListener(new MyDocumentListener());
+    private void createButtonConnect() {
+        connectButton = ComponentsCreator.createButton("Connect");
+        connectButton.addActionListener(e -> {
+        });
     }
 
-    private void configureNameLabel(JLabel label) {
-        Font font = new Font("Arial", Font.BOLD, 26);
-        label.setFont(font);
+    private void createButtonCreate() {
+        createButton = ComponentsCreator.createButton("Create");
+        createButton.addActionListener(e -> {
+        });
+    }
+
+    private void createButtonHelp() {
+        helpButton = ComponentsCreator.createButton("Help");
+        helpButton.addActionListener(e -> help.setVisible(true));
+    }
+
+    private void createNameEnterField() {
+        nameEnter = ComponentsCreator.createTextField();
+        nameEnter.setPreferredSize(new Dimension(200, 36));
+    }
+
+    private void createNameLabel() {
+        nameLabel = new JLabel("Enter name:");
+        nameLabel.setFont(new Font("Arial", Font.BOLD, 26));
     }
 }
