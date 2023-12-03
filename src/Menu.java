@@ -20,52 +20,48 @@ import javax.swing.event.DocumentListener;
 
 public class Menu extends JFrame {
 
+    //Some class private stuff
     private CardLayout partsPanels;
     private JPanel partPanel;
-
     private JTextField nameEnter;
-
     private Message help;
+    private JButton playButton;
+    private JButton exitButton;
+    private JButton backButton;
+    private JButton connectButton;
+    private JButton createButton;
+    private JButton helpButton;
 
+    private JLabel nameLabel;
 
+    private AnimatedPanel mainMenuPanel;
+    private AnimatedPanel playPanel;
+
+    //All music stuff
     private Clip backgroundMusic;
     private Clip buttonHoverSound;
-
     private Clip typeSound;
 
+    //Menu constructor
     public Menu() {
-        setTitle("Sea Battle");
-        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuIcon.png"))).getImage());
-        setSize(450, 330);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setResizable(false);
+        mainWindowCretion();
+        allObjectsCreation();
+        panelsCreation();
+        musicCreation();
+        helpDialogCreation();
+        setVisible(true);
+    }
 
-        partsPanels = new CardLayout();
-        partPanel = new JPanel(partsPanels);
-        help = new Message(" -Press 'connect' if your friend already created a game to link with him and start to play\n -Press 'create' to make your own host\n -Don't foget to enter your name \n -Good luck!");
-
-        // Создаем прозрачную панель
-        TransparentPanel mainMenuPanel = new TransparentPanel();
-        mainMenuPanel.setBounds(0, 0, 450, 330);
-
-        TransparentPanel playPanel = new TransparentPanel();
-        playPanel.setBounds(0, 0, 450, 330);
-
-        JButton playButton = new JButton("Play");
-        JButton exitButton = new JButton("Exit");
-        JButton backButton = new JButton("Back");
-        JButton connectButton = new JButton("Connect");
-        JButton createButton = new JButton("Create");
-        JButton helpButton = new JButton("Help");
-
+    private void allObjectsCreation() {
+        playButton = new JButton("Play");
+        exitButton = new JButton("Exit");
+        backButton = new JButton("Back");
+        connectButton = new JButton("Connect");
+        createButton = new JButton("Create");
+        helpButton = new JButton("Help");
         nameEnter = new JTextField();
+        nameLabel = new JLabel("Enter name:");
 
-        JLabel nameLabel = new JLabel("Enter name:");
-
-
-        // Настройка кнопок
         configureButtonPlay(playButton);
         configureButtonExit(exitButton);
         configureButtonBack(backButton);
@@ -74,7 +70,17 @@ public class Menu extends JFrame {
         configureButtonHelp(helpButton);
         configureNameEnterField(nameEnter);
         configureNameLabel(nameLabel);
+    }
 
+    private void panelsCreation() {
+        partsPanels = new CardLayout();
+        partPanel = new JPanel(partsPanels);
+
+        mainMenuPanel = new AnimatedPanel();
+        mainMenuPanel.setBounds(0, 0, 450, 330);
+
+        playPanel = new AnimatedPanel();
+        playPanel.setBounds(0, 0, 450, 330);
 
         playPanel.add(nameEnter, 1, 0);
         playPanel.add(nameLabel, 0, 0);
@@ -90,23 +96,31 @@ public class Menu extends JFrame {
         partPanel.add(playPanel, "game");
 
         partsPanels.show(partPanel, "start");
-
-        getContentPane().add(partPanel);
-
-        loadBackgroundMusic("MenuTheme.wav");
-        playBackgroundMusic();
-
-        loadButtonHoverSound("ButtonSound.wav");
-
-        loadTypeSound("TypeSound.wav");
-
-        // Создаем кнопки
-
-
-        setVisible(true);
+        this.getContentPane().add(partPanel);
     }
 
-    private void configureButtonHelp(JButton button) {
+    private void musicCreation() {
+        loadBackgroundMusic("MenuTheme.wav");
+        loadButtonHoverSound("ButtonSound.wav");
+        loadTypeSound("TypeSound.wav");
+        playBackgroundMusic();
+    }
+
+    private void mainWindowCretion() {
+        setTitle("Sea Battle");
+        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuIcon.png"))).getImage());
+        setSize(450, 330);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setResizable(false);
+    }
+
+    private void helpDialogCreation() {
+        help = new Message(" -Press 'connect' if your friend already created a game to link with him and start to play\n -Press 'create' to make your own host\n -Don't foget to enter your name \n -Good luck!");
+    }
+
+    private void createButton(JButton button) {
         button.setBackground(new Color(0xB8CEE4));
         button.setForeground(Color.WHITE);
         Border border = new LineBorder(new Color(0, 0, 0), 4, false);
@@ -116,14 +130,16 @@ public class Menu extends JFrame {
         button.setForeground(new Color(0, 0, 0, 255));
         button.setFocusPainted(false);
         button.setPreferredSize(new Dimension(150, 50));
+    }
 
+    private void configureButtonHelp(JButton button) {
+        createButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 help.setVisible(true);
             }
         });
-
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -133,20 +149,41 @@ public class Menu extends JFrame {
     }
 
     private void configureButtonCreate(JButton button) {
-        button.setBackground(new Color(0xB8CEE4));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0, 255));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-
+        createButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //partsPanels.show(partPanel, "game");
+            }
+        });
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+            }
+        });
+    }
+
+    private void configureButtonConnect(JButton button) {
+        createButton(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+            }
+        });
+    }
+
+    private void configureButtonPlay(JButton button) {
+        createButton(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                partsPanels.show(partPanel, "game");
             }
         });
 
@@ -158,21 +195,30 @@ public class Menu extends JFrame {
         });
     }
 
-    private void configureButtonConnect(JButton button) {
-        button.setBackground(new Color(0xB8CEE4));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0, 255));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-
+    private void configureButtonExit(JButton button) {
+        createButton(button);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //partsPanels.show(partPanel, "game");
+                System.exit(0);
+            }
+        });
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                playButtonHoverSound();
+            }
+        });
+    }
+
+    private void configureButtonBack(JButton button) {
+        createButton(button);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nameEnter.setText("");
+                partsPanels.show(partPanel, "start");
+
             }
         });
 
@@ -192,7 +238,6 @@ public class Menu extends JFrame {
         Font font = new Font("Arial", Font.ITALIC, 21);
         textField.setFont(font);
         textField.getDocument().addDocumentListener(new DocumentListener() {
-
             @Override
             public void insertUpdate(DocumentEvent e) {
                 playTypeSound();
@@ -200,7 +245,6 @@ public class Menu extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                // playTypeSound();
             }
 
             @Override
@@ -212,95 +256,13 @@ public class Menu extends JFrame {
     private void configureNameLabel(JLabel label) {
         Font font = new Font("Arial", Font.BOLD, 26);
         label.setFont(font);
-
     }
 
-    private void configureButtonPlay(JButton button) {
-        button.setBackground(new Color(0xB8CEE4));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0, 255));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                partsPanels.show(partPanel, "game");
-            }
-        });
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                playButtonHoverSound();
-            }
-        });
-    }
-
-    private void configureButtonExit(JButton button) {
-        button.setBackground(new Color(0xB8CEE4));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                playButtonHoverSound();
-            }
-        });
-    }
-
-    private void configureButtonBack(JButton button) {
-        button.setBackground(new Color(0xB8CEE4));
-        button.setForeground(Color.WHITE);
-        Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-        button.setBorder(border);
-        Font font = new Font("Arial", Font.BOLD, 26);
-        button.setFont(font);
-        button.setForeground(new Color(0, 0, 0, 255));
-        button.setFocusPainted(false);
-        button.setPreferredSize(new Dimension(150, 50));
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nameEnter.setText("");
-                partsPanels.show(partPanel, "start");
-
-            }
-        });
-
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                playButtonHoverSound();
-            }
-        });
-    }
-
-    // Класс для создания прозрачной панели
-    private static class TransparentPanel extends JPanel {
+    private static class AnimatedPanel extends JPanel {
 
         private Image backgroundImage;
 
-        public TransparentPanel() {
-            // Загружаем изображение из ресурсов
+        public AnimatedPanel() {
             backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuAnimation.gif")))
                     .getImage();
             setLayout(new GridBagLayout());
@@ -317,7 +279,6 @@ public class Menu extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            // Рисуем изображение
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
@@ -330,25 +291,23 @@ public class Menu extends JFrame {
             setLayout(new BorderLayout());
             setResizable(false);
             setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("HelpIcon.png"))).getImage());
-
+            setSize(485, 200);
+            setLocationRelativeTo(null);
 
             JTextArea textArea = new JTextArea(text);
-            configuretextArea(textArea,text);
-            add(textArea, BorderLayout.CENTER);
+            configuretextArea(textArea, text);
 
             JButton okButton = new JButton("Close");
             configureButton(okButton);
+
+            add(textArea, BorderLayout.CENTER);
             add(okButton, BorderLayout.SOUTH);
 
-            setSize(485, 200);
-            setLocationRelativeTo(null);
             setVisible(false);
-
         }
 
         private void configuretextArea(JTextArea textArea, String text) {
             textArea.setEditable(false);
-
             Font font = new Font("Arial", Font.BOLD, 16);
             textArea.setFont(font);
             textArea.setForeground(Color.BLACK);
@@ -359,15 +318,7 @@ public class Menu extends JFrame {
         }
 
         private void configureButton(JButton okButton) {
-            okButton.setBackground(new Color(0xFFFFFF));
-            okButton.setForeground(Color.WHITE);
-            Border border = new LineBorder(new Color(0, 0, 0), 4, false);
-            okButton.setBorder(border);
-            Font font2 = new Font("Arial", Font.BOLD, 26);
-            okButton.setFont(font2);
-            okButton.setForeground(new Color(0, 0, 0, 255));
-            okButton.setFocusPainted(false);
-            okButton.setPreferredSize(new Dimension(150, 50));
+            createButton(okButton);
             okButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -414,7 +365,7 @@ public class Menu extends JFrame {
 
     private void playButtonHoverSound() {
         if (buttonHoverSound != null) {
-            buttonHoverSound.setFramePosition(0); // Rewind to the beginning
+            buttonHoverSound.setFramePosition(0);
             buttonHoverSound.start();
         }
     }
@@ -432,9 +383,8 @@ public class Menu extends JFrame {
 
     private void playTypeSound() {
         if (typeSound != null) {
-            typeSound.setFramePosition(80); // Rewind to the beginning
+            typeSound.setFramePosition(80);
             typeSound.start();
         }
     }
-
 }
