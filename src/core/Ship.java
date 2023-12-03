@@ -1,5 +1,7 @@
 package core;
 
+import dto.Coordinate;
+import dto.Response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,6 @@ import java.util.List;
 public class Ship {
     private int partsAlive;
     private List<PartOfShip> parts;
-    transient private ShipInformer shipInformer;
 
     public Ship(List<PartOfShip> parts) {
         this.partsAlive = parts.size();
@@ -28,16 +29,18 @@ public class Ship {
         }
     }
 
-    public boolean update(Coordinate coordinate) {
+    public Response update(Coordinate coordinate) {
         for (PartOfShip part : parts) {
             if (part.update(coordinate)) {
                 --partsAlive;
+                Response response = new Response(coordinate);
+                response.setHit(true);
                 if (partsAlive == 0) {
-                    shipInformer.informAboutDestruction(parts.stream().map(PartOfShip::getCoordinate).toList());
+                    response.setCoordinates(parts.stream().map(PartOfShip::getCoordinate).toList());
                 }
-                return true;
+                return response;
             }
         }
-        return false;
+        return null;
     }
 }

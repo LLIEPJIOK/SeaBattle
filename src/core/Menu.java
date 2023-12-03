@@ -1,6 +1,11 @@
 package core;
 
+import client.ClientWindow;
+import server.Server;
+
 import java.awt.*;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Objects;
 import javax.swing.*;
 
@@ -27,7 +32,6 @@ public class Menu extends JFrame {
         panelsCreation();
         musicCreation();
         helpDialogCreation();
-        setVisible(true);
     }
 
     private void mainWindowCreation() {
@@ -101,21 +105,24 @@ public class Menu extends JFrame {
 
     private void createButtonBack() {
         backButton = ComponentsCreator.createButton("Back");
-        backButton.addActionListener(e -> {
-            nameEnter.setText("");
-            partsPanels.show(partPanel, "start");
-        });
+        backButton.addActionListener(e -> partsPanels.show(partPanel, "start"));
     }
 
     private void createButtonConnect() {
         connectButton = ComponentsCreator.createButton("Connect");
         connectButton.addActionListener(e -> {
+            this.setVisible(false);
+            ClientWindow clientWindow = new ClientWindow(8080, false);
+            clientWindow.setVisible(true);
         });
     }
 
     private void createButtonCreate() {
         createButton = ComponentsCreator.createButton("Create");
         createButton.addActionListener(e -> {
+            this.setVisible(false);
+            ClientWindow clientWindow = new ClientWindow(8080, true);
+            clientWindow.setVisible(true);
         });
     }
 

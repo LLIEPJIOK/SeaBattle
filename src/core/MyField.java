@@ -1,26 +1,41 @@
 package core;
 
+import dto.Coordinate;
+import dto.MyActionEvent;
+import dto.Request;
+import dto.Response;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.JComponent;
 
-public class MyField extends JComponent {
+import client.ClientWindow;
+
+public class MyField extends JComponent implements ActionListener {
     private final int SIZE = 10;
     private final int CELL_SIZE = 40;
     private final int[][] cells;
     private final List<Ship> ships;
     private final boolean isEnemy;
+    private final MessageWriter messageWriter;
 
-    public MyField(boolean isEnemy) {
+    public MyField(MessageWriter messageWriter, boolean isEnemy, boolean isHost) {
         this.isEnemy = isEnemy;
+        this.messageWriter = messageWriter;
+
         cells = new int[SIZE][SIZE];
         createWindow();
 
-        ships = ShipsGenerator.generate();
-        setShipInformers(this::handleDestruction);
+        if (isHost) {
+            ships = ShipsReader.read("1.json");
+        } else {
+            ships = ShipsReader.read("2.json");
+        }
     }
 
     private void drawField(Graphics2D g2d) {
@@ -30,14 +45,24 @@ public class MyField extends JComponent {
             g2d.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, (SIZE + 1) * CELL_SIZE);
             g2d.drawLine(0, i * CELL_SIZE, (SIZE + 1) * CELL_SIZE, i * CELL_SIZE);
         }
-        g2d.setColor(Color.red);
-        g2d.setStroke(new BasicStroke(5.0f));
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 if (cells[i][j] == 1) {
+                    g2d.setStroke(new BasicStroke(5.0f));
+                    g2d.setColor(Color.red);
                     int x = (int) ((j + 1.5) * CELL_SIZE);
                     int y = (int) ((i + 1.5) * CELL_SIZE);
                     g2d.fillOval(x - 4, y - 4, 8, 8);
+                }
+                if (cells[i][j] == -1) {
+                    g2d.setStroke(new BasicStroke(2.0f));
+                    int x = (j + 1) * CELL_SIZE;
+                    int y = (i + 1) * CELL_SIZE;
+                    g2d.setColor(Color.RED);
+                    g2d.drawLine(x, y, x + CELL_SIZE, y + CELL_SIZE);
+                    g2d.drawLine(x + CELL_SIZE, y, x, y + CELL_SIZE);
+                    g2d.setColor(Color.BLUE);
+                    g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
                 }
             }
         }
@@ -89,17 +114,29 @@ public class MyField extends JComponent {
     private void createWindow() {
         setSize(new Dimension((SIZE + 1) * CELL_SIZE + 3, (SIZE + 1) * CELL_SIZE + 3));
         if (isEnemy) {
-            addMouseListener(new CellClickListener());
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    int x = e.getX() / CELL_SIZE;
+                    int y = e.getY() / CELL_SIZE;
+                    if (ClientWindow.canAttack && Math.min(x, y) > 0 && Math.max(x, y) <= 10 && cells[y - 1][x - 1] == 0) {
+                        ClientWindow.canAttack = false;
+                        messageWriter.write(new Request(new Coordinate(x, y)));
+                        repaint();
+                    }
+                }
+            });
         }
     }
 
-    private boolean updateShips(Coordinate coordinate) {
+    private Response updateShips(Coordinate coordinate) {
+        Response response;
         for (Ship ship : ships) {
-            if (ship.update(coordinate)) {
-                return true;
+            if ((response = ship.update(coordinate)) != null) {
+                return response;
             }
         }
-        return false;
+        return new Response(coordinate);
     }
 
     private void surroundWithDots(Coordinate coordinate) {
@@ -112,32 +149,49 @@ public class MyField extends JComponent {
         }
     }
 
-    private void setShipInformers(ShipInformer shipInformer) {
-        for (Ship ship : ships) {
-            ship.setShipInformer(shipInformer);
-        }
-    }
-
     private void handleDestruction(List<Coordinate> shipCoordinates) {
         for (Coordinate coordinate : shipCoordinates) {
             surroundWithDots(coordinate);
         }
     }
 
-    private class CellClickListener extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int row = e.getY() / CELL_SIZE - 1;
-            int col = e.getX() / CELL_SIZE - 1;
-            if (Math.min(row, col) >= 0 && Math.max(row, col) < 10 && cells[row][col] == 0) {
-                if (updateShips(new Coordinate(col + 1, row + 1))) {
-                    cells[row][col] = -1;
-                } else {
-                    cells[row][col] = 1;
-                }
-                repaint();
+    public void handleResponse(Response response) {
+        int x = response.getCoordinate().getX();
+        int y = response.getCoordinate().getY();
+        if (!response.getCoordinates().isEmpty()) {
+            handleDestruction(response.getCoordinates());
+        }
+        if (response.isHit()) {
+            cells[y - 1][x - 1] = -1;
+            ClientWindow.canAttack = true;
+        } else {
+            cells[y - 1][x - 1] = 1;
+        }
+        repaint();
+    }
+
+    public void handleRequest(Request request) {
+        Response response = updateShips(request.getCoordinate());
+        int x = request.getCoordinate().getX();
+        int y = request.getCoordinate().getY();
+        if (response.isHit()) {
+            cells[y - 1][x - 1] = -1;
+        } else {
+            cells[y - 1][x - 1] = 1;
+            ClientWindow.canAttack = true;
+        }
+        messageWriter.write(response);
+        repaint();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event instanceof MyActionEvent myEvent) {
+            if (myEvent.getData() instanceof Request request) {
+                handleRequest(request);
+            } else if (myEvent.getData() instanceof Response response) {
+                handleResponse(response);
             }
         }
     }
-
 }

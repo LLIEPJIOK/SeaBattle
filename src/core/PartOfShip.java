@@ -1,5 +1,6 @@
 package core;
 
+import dto.Coordinate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +27,7 @@ public class PartOfShip {
         int x = coordinate.getX() * CELL_SIZE;
         int y = coordinate.getY() * CELL_SIZE;
         g2d.setStroke(new BasicStroke(2.0f));
-        if (!isAlive) {
-            g2d.setColor(Color.RED);
-            g2d.drawLine(x, y, x + CELL_SIZE, y + CELL_SIZE);
-            g2d.drawLine(x + CELL_SIZE, y, x, y + CELL_SIZE);
-        }
-        if (!isAlive || !isEnemy) {
+        if (!isEnemy) {
             g2d.setColor(Color.BLUE);
             g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
         }
