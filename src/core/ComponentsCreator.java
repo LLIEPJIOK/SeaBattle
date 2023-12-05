@@ -42,4 +42,14 @@ public class ComponentsCreator {
         textArea.setFocusable(false);
         return textArea;
     }
+
+    public static JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setBackground(new Color(0xB8CEE4));
+        label.setBorder(new LineBorder(new Color(0, 0, 0), 2, false));
+        label.setFont(new Font("Arial", Font.ITALIC, 21));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        return label;
+    }
 }

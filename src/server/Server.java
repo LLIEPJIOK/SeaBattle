@@ -11,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server extends Thread implements ActionListener {
-    private boolean isFinishing;
     private final int port;
 
     MessageWriter firstMessageWriter;
@@ -21,7 +20,6 @@ public class Server extends Thread implements ActionListener {
 
     public Server(int port) {
         this.port = port;
-        isFinishing = false;
     }
 
     public void startServer() {
@@ -35,8 +33,6 @@ public class Server extends Thread implements ActionListener {
             secondMessageReader = new MessageReader(secondClientSocket);
 
             firstMessageReader.addActionListener(this);
-            firstMessageReader.addActionListener(this);
-            secondMessageReader.addActionListener(this);
             secondMessageReader.addActionListener(this);
 
             firstMessageReader.start();
@@ -44,10 +40,6 @@ public class Server extends Thread implements ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void stopServer() {
-        isFinishing = true;
     }
 
     @Override

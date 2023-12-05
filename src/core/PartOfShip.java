@@ -22,15 +22,13 @@ public class PartOfShip {
         this.isAlive = true;
     }
 
-    public void paint(Graphics2D g2d, boolean isEnemy) {
-        final int CELL_SIZE = 40;
-        int x = coordinate.getX() * CELL_SIZE;
-        int y = coordinate.getY() * CELL_SIZE;
+    public void paint(Graphics2D g2d) {
+        int cellSize = Field.CELL_SIZE;
+        int x = coordinate.getX() * cellSize;
+        int y = coordinate.getY() * cellSize;
         g2d.setStroke(new BasicStroke(2.0f));
-        if (!isEnemy) {
-            g2d.setColor(Color.BLUE);
-            g2d.drawRect(x, y, CELL_SIZE, CELL_SIZE);
-        }
+        g2d.setColor(Color.BLUE);
+        g2d.drawRect(x, y, cellSize, cellSize);
     }
 
     public boolean update(Coordinate coordinate) {

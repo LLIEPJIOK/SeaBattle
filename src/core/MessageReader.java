@@ -40,7 +40,7 @@ public class MessageReader extends Thread {
                                 this, ActionEvent.ACTION_PERFORMED,
                                 "read request", gson.fromJson(reader.readLine(), Request.class)));
                     } else {
-                        listeners.get(1).actionPerformed(new MyActionEvent(
+                        listeners.get(listeners.size() - 1).actionPerformed(new MyActionEvent(
                                 this, ActionEvent.ACTION_PERFORMED,
                                 "read response", gson.fromJson(reader.readLine(), Response.class)));
                     }
