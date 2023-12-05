@@ -32,15 +32,19 @@ public class EnemyField extends Field implements ActionListener {
     public void handleResponse(Response response) {
         int x = response.getCoordinate().getX();
         int y = response.getCoordinate().getY();
-        if (!response.getCoordinates().isEmpty()) {
-            handleDestruction(response.getCoordinates());
-        }
         if (response.isHit()) {
             cells[y - 1][x - 1] = -1;
             playersTurnLabel.setText("Your turn");
         } else {
             cells[y - 1][x - 1] = 1;
             playersTurnLabel.setText("Enemy turn");
+        }
+        if (!response.getCoordinates().isEmpty()) {
+            handleDestruction(response.getCoordinates());
+            --shipsAlive;
+            if (shipsAlive == 0) {
+                playersTurnLabel.setText("Your win!");
+            }
         }
         repaint();
     }

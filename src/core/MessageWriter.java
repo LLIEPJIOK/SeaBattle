@@ -1,6 +1,7 @@
 package core;
 
 import com.google.gson.Gson;
+import dto.Request;
 import dto.Response;
 
 import java.io.*;
@@ -18,12 +19,13 @@ public class MessageWriter {
     }
 
     public void write(Object obj) {
-        int type = 0;
-        if (obj instanceof Response) {
-            type = 1;
+        switch (obj.getClass().getSimpleName()) {
+            case "Response" -> writer.write("response\n");
+            case "Request" -> writer.write("request\n");
+            case "String" -> writer.write("name\n");
         }
         Gson gson = new Gson();
-        writer.write(type + "\n" + gson.toJson(obj) + "\n");
+        writer.write(gson.toJson(obj) + "\n");
         writer.flush();
     }
 }

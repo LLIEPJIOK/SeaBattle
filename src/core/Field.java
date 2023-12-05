@@ -13,11 +13,13 @@ public class Field extends JComponent {
     protected final int[][] cells;
     protected final MessageWriter messageWriter;
     protected JLabel playersTurnLabel;
+    protected int shipsAlive;
 
     public Field(MessageWriter messageWriter, JLabel playersTurnLabel) {
         this.messageWriter = messageWriter;
         this.playersTurnLabel = playersTurnLabel;
         this.cells = new int[SIZE][SIZE];
+        this.shipsAlive = 10;
         this.setSize(new Dimension((SIZE + 1) * CELL_SIZE + 3, (SIZE + 1) * CELL_SIZE + 3));
     }
 

@@ -57,6 +57,10 @@ public class MyField extends Field implements ActionListener {
             cells[y - 1][x - 1] = -1;
             if (!response.getCoordinates().isEmpty()) {
                 handleDestruction(response.getCoordinates());
+                --shipsAlive;
+                if (shipsAlive == 0) {
+                    playersTurnLabel.setText("Your lose!");
+                }
             }
         } else {
             cells[y - 1][x - 1] = 1;

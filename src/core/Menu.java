@@ -36,7 +36,7 @@ public class Menu extends JFrame {
 
     private void mainWindowCreation() {
         setTitle("Sea Battle");
-        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("MenuIcon.png"))).getImage());
+        setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("../MenuIcon.png"))).getImage());
         setSize(450, 330);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -112,7 +112,7 @@ public class Menu extends JFrame {
         connectButton = ComponentsCreator.createButton("Connect");
         connectButton.addActionListener(e -> {
             this.setVisible(false);
-            ClientWindow clientWindow = new ClientWindow(8080, false);
+            ClientWindow clientWindow = new ClientWindow(nameEnter.getText(), 8080, false);
             clientWindow.setVisible(true);
         });
     }
@@ -121,7 +121,7 @@ public class Menu extends JFrame {
         createButton = ComponentsCreator.createButton("Create");
         createButton.addActionListener(e -> {
             this.setVisible(false);
-            ClientWindow clientWindow = new ClientWindow(8080, true);
+            ClientWindow clientWindow = new ClientWindow(nameEnter.getText(), 8080, true);
             clientWindow.setVisible(true);
         });
     }
