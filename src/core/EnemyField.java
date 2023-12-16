@@ -48,10 +48,11 @@ public class EnemyField extends Field implements ActionListener {
         }
         repaint();
     }
+
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event instanceof MyActionEvent myEvent) {
-            if (myEvent.getData() instanceof Response response) {
+            if (myEvent.getMessage() instanceof Response response) {
                 handleResponse(response);
             }
         }

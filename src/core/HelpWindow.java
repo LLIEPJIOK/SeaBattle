@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class Message extends JDialog {
-    Message(String text) {
+public class HelpWindow extends JDialog {
+    HelpWindow(String text) {
         setTitle("How to start");
         setModal(true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

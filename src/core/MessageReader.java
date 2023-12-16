@@ -1,55 +1,56 @@
 package core;
 
-import com.google.gson.Gson;
+import dto.Message;
 import dto.MyActionEvent;
-import dto.Request;
-import dto.Response;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageReader extends Thread {
-    BufferedReader reader;
+    private final DataInputStream in;
     private final List<ActionListener> listeners;
     private boolean isFinishing;
+
+    private final XmlConverter xmlConverter = new XmlConverter();
 
     public MessageReader(Socket socket) {
         isFinishing = false;
         listeners = new ArrayList<>();
         try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new DataInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void read() {
-        while (!isFinishing) {
-            try {
-                String ans;
-                if ((ans = reader.readLine()) != null) {
-                    Gson gson = new Gson();
-                    switch (ans) {
-                        case "request" -> listeners.get(0).actionPerformed(new MyActionEvent(
-                                this, ActionEvent.ACTION_PERFORMED,
-                                "read request", gson.fromJson(reader.readLine(), Request.class)));
-                        case "response" -> listeners.get(listeners.size() == 1 ? 0 : 1).actionPerformed(new MyActionEvent(
-                                this, ActionEvent.ACTION_PERFORMED,
-                                "read response", gson.fromJson(reader.readLine(), Response.class)));
-                        case "name" -> listeners.getLast().actionPerformed(new MyActionEvent(
-                                this, ActionEvent.ACTION_PERFORMED,
-                                "read name", gson.fromJson(reader.readLine(), String.class)));
+        try {
+            while (!isFinishing) {
+                if (in.available() > 0) {
+                    int length = in.readInt();
+                    String name = in.readUTF();
+                    ByteArrayInputStream byteIn = new ByteArrayInputStream(in.readNBytes(length));
+                    Message message = xmlConverter.fromXml((Class<? extends Message>) Class.forName(name), byteIn);
+                    ActionListener listener = null;
+                    switch (name) {
+                        case "dto.Request" -> listener = listeners.getFirst();
+                        case "dto.Response" -> listener = listeners.get(listeners.size() == 1 ? 0 : 1);
+                        case "dto.NameMessage" -> listener = listeners.getLast();
                     }
+                    assert listener != null;
+                    listener.actionPerformed(new MyActionEvent(
+                            this, ActionEvent.ACTION_PERFORMED,
+                            "read name", message));
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+        } catch (Exception e) {
+            // TODO: handle error
+            throw new RuntimeException(e);
         }
     }
 

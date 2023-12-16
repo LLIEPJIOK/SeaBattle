@@ -73,7 +73,7 @@ public class MyField extends Field implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event instanceof MyActionEvent myEvent) {
-            if (myEvent.getData() instanceof Request request) {
+            if (myEvent.getMessage() instanceof Request request) {
                 handleRequest(request);
             }
         }

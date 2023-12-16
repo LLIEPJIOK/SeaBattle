@@ -17,18 +17,22 @@ public class Server extends Thread implements ActionListener {
     MessageReader firstMessageReader;
     MessageWriter secondMessageWriter;
     MessageReader secondMessageReader;
+    ServerSocket serverSocket;
+    Socket firstClientSocket;
+    Socket secondClientSocket;
 
     public Server(int port) {
         this.port = port;
     }
 
     public void startServer() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            Socket firstClientSocket = serverSocket.accept();
+        try {
+            serverSocket = new ServerSocket(port);
+            firstClientSocket = serverSocket.accept();
             firstMessageWriter = new MessageWriter(firstClientSocket);
             firstMessageReader = new MessageReader(firstClientSocket);
 
-            Socket secondClientSocket = serverSocket.accept();
+            secondClientSocket = serverSocket.accept();
             secondMessageWriter = new MessageWriter(secondClientSocket);
             secondMessageReader = new MessageReader(secondClientSocket);
 
@@ -51,9 +55,9 @@ public class Server extends Thread implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         if (event instanceof MyActionEvent myEvent) {
             if (myEvent.getSource() == firstMessageReader) {
-                secondMessageWriter.write(myEvent.getData());
+                secondMessageWriter.write(myEvent.getMessage());
             } else if (myEvent.getSource() == secondMessageReader) {
-                firstMessageWriter.write(myEvent.getData());
+                firstMessageWriter.write(myEvent.getMessage());
             }
         }
     }

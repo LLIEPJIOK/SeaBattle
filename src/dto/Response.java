@@ -1,5 +1,6 @@
 package dto;
 
+import jakarta.xml.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +13,24 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Response extends Message {
+
+    @XmlElement
     private Coordinate coordinate;
+
+    @XmlElement
     private boolean isHit;
+
+    @XmlElementWrapper(name="coordinates")
+    @XmlElement(name="coordinate")
     private List<Coordinate> coordinates;
 
     public Response(Coordinate coordinate) {
         this.coordinate = coordinate;
-        isHit = false;
-        coordinates = new ArrayList<>();
+        this.isHit = false;
+        this.coordinates = new ArrayList<>();
+        this.messageType = MessageType.RESPONSE;
     }
 }

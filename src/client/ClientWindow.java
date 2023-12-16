@@ -2,6 +2,7 @@ package client;
 
 import core.*;
 import dto.MyActionEvent;
+import dto.NameMessage;
 import server.Server;
 
 import java.awt.*;
@@ -18,6 +19,8 @@ public class ClientWindow extends JFrame implements ActionListener {
     private final JLabel playersTurnLabel;
     private final JLabel enemyNameLabel;
 
+    private Socket socket;
+
     public ClientWindow(String name, int port, boolean isHost) {
         setTitle("Sea Battle");
         setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("../MenuIcon.png"))).getImage());
@@ -29,7 +32,7 @@ public class ClientWindow extends JFrame implements ActionListener {
             server.start();
         }
         try {
-            Socket socket = new Socket("localhost", port);
+            socket = new Socket("localhost", port);
             MessageWriter messageWriter = new MessageWriter(socket);
             MessageReader messageReader = new MessageReader(socket);
 
@@ -62,7 +65,8 @@ public class ClientWindow extends JFrame implements ActionListener {
             messageReader.addActionListener(this);
             messageReader.start();
 
-            messageWriter.write(name);
+            NameMessage nameMessage = new NameMessage(name);
+            messageWriter.write(nameMessage);
 
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -72,8 +76,8 @@ public class ClientWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         if (event instanceof MyActionEvent myEvent) {
-            if (myEvent.getData() instanceof String name) {
-                enemyNameLabel.setText(name);
+            if (myEvent.getMessage() instanceof NameMessage message) {
+                enemyNameLabel.setText(message.getUserName());
                 if (playersTurnLabel.getText().equals("Waiting another player...")) {
                     playersTurnLabel.setText("Your turn");
                 }

@@ -1,11 +1,8 @@
 package core;
 
 import client.ClientWindow;
-import server.Server;
 
 import java.awt.*;
-import java.io.IOException;
-import java.net.Socket;
 import java.util.Objects;
 import javax.swing.*;
 
@@ -15,7 +12,7 @@ public class Menu extends JFrame {
     private CardLayout partsPanels;
     private JPanel partPanel;
     private JTextField nameEnter;
-    private Message help;
+    private HelpWindow help;
     private JButton playButton;
     private JButton exitButton;
     private JButton backButton;
@@ -90,7 +87,7 @@ public class Menu extends JFrame {
     }
 
     private void helpDialogCreation() {
-        help = new Message(" -Press 'connect' if your friend already created a game to link with him and start to play\n -Press 'create' to make your own host\n -Don't foget to enter your name \n -Good luck!");
+        help = new HelpWindow(" -Press 'connect' if your friend already created a game to link with him and start to play\n -Press 'create' to make your own host\n -Don't foget to enter your name \n -Good luck!");
     }
 
     private void createButtonPlay() {

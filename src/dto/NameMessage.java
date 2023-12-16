@@ -4,23 +4,20 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Request extends Message {
-
+public class NameMessage extends Message implements Serializable {
     @XmlElement
-    private Coordinate coordinate;
-
-    public Request(Coordinate coordinate) {
-        this.coordinate = coordinate;
-        this.messageType = MessageType.REQUEST;
+    public String userName;
+    public NameMessage(String userName) {
+        this.userName = userName;
+        this.messageType = MessageType.NAME;
     }
 }

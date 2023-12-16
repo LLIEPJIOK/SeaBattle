@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="projectlombok.lombok" level="project" />
+    <orderEntry type="library" name="sun.xml.bind.jaxb.impl" level="project" />
   </component>
 </module>
