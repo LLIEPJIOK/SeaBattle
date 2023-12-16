@@ -11,5 +11,6 @@
     <orderEntry type="library" name="google.code.gson" level="project" />
     <orderEntry type="library" name="projectlombok.lombok" level="project" />
     <orderEntry type="library" name="sun.xml.bind.jaxb.impl" level="project" />
+    <orderEntry type="library" name="innoventsolutions.birt.runtime.apache.xerces_2.9.0.v201101211617" level="project" />
   </component>
 </module>

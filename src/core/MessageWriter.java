@@ -6,12 +6,12 @@ import java.io.*;
 import java.net.Socket;
 
 public class MessageWriter {
-    private final DataOutputStream out;
+    private final DataOutputStream dataOut;
     private final XmlConverter xmlConverter = new XmlConverter();
 
     public MessageWriter(Socket socket) {
         try {
-            out = new DataOutputStream(socket.getOutputStream());
+            dataOut = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             // TODO: handle error
             throw new RuntimeException(e);
@@ -26,10 +26,10 @@ public class MessageWriter {
             bufOut.flush();
 
             byte[] res = byteOut.toByteArray();
-            out.writeInt(res.length);
-            out.writeUTF(message.getClass().getName());
-            out.write(res);
-            out.flush();
+            dataOut.writeInt(res.length);
+            dataOut.writeUTF(message.getClass().getName());
+            dataOut.write(res);
+            dataOut.flush();
         } catch (Exception e) {
             // TODO: handle error
             throw new RuntimeException(e);

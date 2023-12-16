@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="response" type="response"/>
+
+  <xs:complexType name="response">
+    <xs:complexContent>
+      <xs:extension base="message">
+        <xs:sequence>
+          <xs:element name="coordinate" type="coordinate" minOccurs="0"/>
+          <xs:element name="isHit" type="xs:boolean"/>
+          <xs:element name="coordinates" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="coordinate" type="coordinate" minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="message" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="messageType" type="messageType"/>
+  </xs:complexType>
+
+  <xs:complexType name="coordinate">
+    <xs:sequence>
+      <xs:element name="x" type="xs:int"/>
+      <xs:element name="y" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="messageType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RESPONSE"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

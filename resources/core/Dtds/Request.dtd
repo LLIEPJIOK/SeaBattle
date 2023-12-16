@@ -1,0 +1,32 @@
+<!ELEMENT xs:attribute EMPTY >
+<!ATTLIST xs:attribute name NMTOKEN #REQUIRED >
+<!ATTLIST xs:attribute type NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:complexContent ( xs:extension ) >
+
+<!ELEMENT xs:complexType ( xs:attribute | xs:complexContent | xs:sequence )* >
+<!ATTLIST xs:complexType abstract NMTOKEN #IMPLIED >
+<!ATTLIST xs:complexType name NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:element EMPTY >
+<!ATTLIST xs:element minOccurs NMTOKEN #IMPLIED >
+<!ATTLIST xs:element name NMTOKEN #REQUIRED >
+<!ATTLIST xs:element type NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:enumeration EMPTY >
+<!ATTLIST xs:enumeration value NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:extension ( xs:sequence ) >
+<!ATTLIST xs:extension base NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:restriction ( xs:enumeration+ ) >
+<!ATTLIST xs:restriction base NMTOKEN #REQUIRED >
+
+<!ELEMENT xs:schema ( xs:element, xs:complexType+, xs:simpleType ) >
+<!ATTLIST xs:schema version NMTOKEN #REQUIRED >
+<!ATTLIST xs:schema xmlns:xs CDATA #REQUIRED >
+
+<!ELEMENT xs:sequence ( xs:element* ) >
+
+<!ELEMENT xs:simpleType ( xs:restriction ) >
+<!ATTLIST xs:simpleType name NMTOKEN #REQUIRED >

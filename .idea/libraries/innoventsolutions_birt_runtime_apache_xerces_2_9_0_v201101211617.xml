@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="innoventsolutions.birt.runtime.apache.xerces_2.9.0.v201101211617" type="repository">
+    <properties maven-id="com.innoventsolutions.birt.runtime:org.apache.xerces_2.9.0.v201101211617:4.8.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/innoventsolutions/birt/runtime/org.apache.xerces_2.9.0.v201101211617/4.8.0/org.apache.xerces_2.9.0.v201101211617-4.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="nameMessage" type="nameMessage"/>
+
+  <xs:complexType name="nameMessage">
+    <xs:complexContent>
+      <xs:extension base="message">
+        <xs:sequence>
+          <xs:element name="userName" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="message" abstract="true">
+    <xs:sequence/>
+    <xs:attribute name="messageType" type="messageType"/>
+  </xs:complexType>
+
+  <xs:simpleType name="messageType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NAME"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

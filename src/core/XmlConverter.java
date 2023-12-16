@@ -1,14 +1,9 @@
 package core;
 
 import dto.Message;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class XmlConverter implements Serializable {
 
